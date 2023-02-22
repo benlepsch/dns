@@ -57,19 +57,18 @@ class Util:
 
     @staticmethod
     def binaryToAsciiQNAME(_input_binary):
-        """
-            skip first 12 bytes (96 bits) (header)
-            actually don't do this
-        """
-        _input_binary = _input_binary.split('00000000')[0] # QNAME terminated with null byte
+        _input_binary = _input_binary.rstrip('0') # remove trailing null bytes
         ascii_qname = ''
-        
-        while len(_input_binary):
-            next_len = int(_input_binary[0:8], 2)
-            _input_binary = _input_binary[8:]
-            next_part = _input_binary[:next_len*8]
-            _input_binary = _input_binary[next_len*8:]
-            ascii_qname += Util.binaryToAscii(('0' * ((8-len(next_part)) if len(next_part) < 8 else 0)) + next_part)
+        i = 0
+        while i < len(_input_binary):
+            next_len = int(_input_binary[i:i+8], 2)
+            i += 8
+            next_part = _input_binary[i:i+(next_len*8)]
+            i += next_len*8
+            ascii_qname += Util.binaryToAscii(next_part)
+            if i >= len(_input_binary):
+                break
+            # ascii_qname += '.'
         return ascii_qname
 
 

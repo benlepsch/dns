@@ -50,10 +50,10 @@ def main():
             # print(data)
             logging.info('DNS Server State: %s', 'started and recieved first packet', extra={'bufferSize': BUFFERSIZE})
             dnsPacket = DNSPacket(data)
-            print("----------------Packet Recieved------------\n " + str(dnsPacket))
+            # print("----------------Packet Recieved------------\n " + str(dnsPacket))
             dnsPacketModified = modifier.modify(dnsPacket)
-            print("----------------Packet Sent--------------\n " + str(dnsPacket))
-            print(str(dnsPacketModified))
+            # print("----------------Packet Sent--------------\n " + str(dnsPacket))
+            # print(str(dnsPacketModified))
             sock_DNS_in.sendto(dnsPacketModified.serializePacket(),addr)
         except KeyboardInterrupt:
             sys.exit()

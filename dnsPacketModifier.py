@@ -42,28 +42,29 @@ class DNSPacketModifier:
         data, addr = self.socket_DNS_out.recvfrom(2048)
         dnsPacket = DNSPacket(data)
 
-        # print('in modify: arraylen: {}\tancount: {}'.format(len(dnsPacket.ArrayOfAnswers), dnsPacket.get_ANCOUNT()))
+        print('in modify: arraylen: {}\tancount: {}'.format(len(dnsPacket.ArrayOfAnswers), dnsPacket.get_ANCOUNT()))
         
         if (q := dnsPacket.ArrayOfQuestions[0].get_QNAME()) in self.dnsCache:
             pass
         elif q in self.urlIPMap:
             mod_ip = self.urlIPMap[q]
-            # print('it\'s in: {}'.format(mod_ip))
+            print('it\'s in: {}'.format(mod_ip))
         else:
+            print('qname: {}'.format(q))
             return dnsPacket
         
         for i, a in enumerate(dnsPacket.ArrayOfAnswers):
-            # print('type: {}'.format(a.get_TYPE()))
+            print('type: {}'.format(a.get_TYPE()))
             if (at := a.get_TYPE()) == 1: # ipv4
                 a.set_RDATA(mod_ip)
                 dnsPacket.replaceAnswerSection(a, i)
-                # print('setting data')
+                print('setting data')
                 
             if at == 28:
                 # print('leaving')
                 pass # ipv6
 
-        # print('----------')
+        print('----------')
         return dnsPacket
         
         # for i, a in enumerate(dnsPacket.ArrayOfAnswers):
